@@ -8,6 +8,22 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+const writeFileCall = function () {
+  fs.writeFile(args[1], body, (err) => {
+    if (err) throw err;
+    console.log('The file has been saved!');
+  });
+}
+
+const optionToOverwrite = function () {
+  rl.question("type 'yes' if you want to overwrite the file.\n", (answer) => {
+    if (answer === "yes") {
+      writeFileCall();
+    }
+    rl.close();
+  });
+}
+
 request(args[0], (error, response, body) => {
   // Return if error is found
   if (error) {
@@ -27,17 +43,7 @@ request(args[0], (error, response, body) => {
         // If filename already exists, prompt user to overwrite the file
         if (err.code === 'EEXIST') {
           console.error(args[1], 'already exists!');
-          rl.question("type 'yes' if you want to overwrite the file.\n", (answer) => {
-            if (answer === "yes") {
-              fs.writeFile(args[1], body, (err) => {
-                if (err) throw err;
-                console.log('The file has been saved!');
-              });
-              rl.close();
-            } else {
-              rl.close();
-            }
-          });
+          optionToOverwrite();
         }
         // If different error code, throw error
         else {
@@ -45,10 +51,7 @@ request(args[0], (error, response, body) => {
         }
     } else {
       // Write the body to a file
-      fs.writeFile(args[1], body, (err) => {
-        if (err) throw err;
-        console.log('The file has been saved!');
-      });
+      writeFileCall();
     }
   });
 });
