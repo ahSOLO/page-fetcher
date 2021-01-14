@@ -32,7 +32,7 @@ request(args[0], (error, response, body) => {
   }
 
   // Return if non 200's status code is received
-  if (response.statusCode > 300 || response.statusCode < 200) {
+  if (response.statusCode > 299 || response.statusCode < 200) {
     console.log('statusCode:', response && response.statusCode); // Print the non 200's status code
     return;
   }
